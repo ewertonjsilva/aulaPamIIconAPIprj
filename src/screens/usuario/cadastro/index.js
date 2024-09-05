@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import styles from './styles';
 import api from '../../../services/api';
@@ -8,19 +9,19 @@ import api from '../../../services/api';
 import Logo from '../../../components/logo';
 
 const estadosOff = [
-  {id : 1, cid_uf : 'UF'}, 
-  {id : 2, cid_uf : 'RJ'}, 
-  {id : 3, cid_uf : 'PR'}, 
-  {id : 4, cid_uf : 'SP'}
+  { id: 1, cid_uf: 'UF' },
+  { id: 2, cid_uf: 'RJ' },
+  { id: 3, cid_uf: 'PR' },
+  { id: 4, cid_uf: 'SP' }
 ];
 
 const cidades = [
-    {id : 0, nome : 'Cidade'}, 
-    {id : 1, nome : 'Tupã'}, 
-    {id : 2, nome : 'Parapuã'}, 
-    {id : 3, nome : 'Marília'}, 
-    {id : 4, nome : 'Paulicéia'}
-  ];
+  { id: 0, nome: 'Cidade' },
+  { id: 1, nome: 'Tupã' },
+  { id: 2, nome: 'Parapuã' },
+  { id: 3, nome: 'Marília' },
+  { id: 4, nome: 'Paulicéia' }
+];
 
 export default function CadCliente({ navigation }) {
   // 0 - cadastro, 1 - sucesso, 2 - erro
@@ -59,7 +60,7 @@ export default function CadCliente({ navigation }) {
       {
         exibe === 0
           ?
-          <Cadastro mudaTela={mudaTela} estados={estados} montaMensagem={montaMensagem} />
+          <Cadastro mudaTela={mudaTela} estados={estados} montaMensagem={montaMensagem} navigation={navigation} />
           :
           exibe === 1
             ?
@@ -71,7 +72,7 @@ export default function CadCliente({ navigation }) {
   );
 }
 
-function Cadastro({ mudaTela, estados, montaMensagem }) {
+function Cadastro({ mudaTela, estados, montaMensagem, navigation }) {
 
   const [cidades, setCidades] = useState([]);
 
@@ -196,93 +197,94 @@ function Cadastro({ mudaTela, estados, montaMensagem }) {
       confirmaCad = 0;
     }
   }
+    return (
 
-  return (
+      <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" enabled>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={styles.containerTitulo}>
+              <MaterialIcons
+                name="arrow-back-ios"
+                size={32}
+                color="#7F0000"
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.text}>Cadastro de usuário</Text>
+            </View>
 
-    <View style={styles.container}>
-      <KeyboardAvoidingView behavior="padding" enabled>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <Text style={styles.text}>Cadastro de usuário</Text>
-          <TextInput placeholder='Nome' style={styles.input} onChangeText={(nm) => setNome(nm)} />
-          <TextInput placeholder='E-mail' style={styles.input} onChangeText={(em) => setEmail(em)} />
-          <TextInput placeholder='Senha' style={styles.input} onChangeText={(sn) => setSenha(sn)} />
-          <TextInput placeholder='Celular' style={styles.input} onChangeText={(cel) => setCelular(cel)} />
-          <TextInput placeholder='Logradouro' style={styles.input} onChangeText={(lg) => setLogradouro(lg)} />
-          <TextInput placeholder='Número' style={styles.input} onChangeText={(nm) => setNum(nm)} />
-          <TextInput placeholder='Bairro' style={styles.input} onChangeText={(nm) => setBairro(nm)} />
-          <TextInput placeholder='Complemento' style={styles.input} onChangeText={(nm) => setCompl(nm)} />
+            <TextInput placeholder='Nome' style={styles.input} onChangeText={(nm) => setNome(nm)} />
+            <TextInput placeholder='E-mail' style={styles.input} onChangeText={(em) => setEmail(em)} />
+            <TextInput placeholder='Senha' style={styles.input} onChangeText={(sn) => setSenha(sn)} />
+            <TextInput placeholder='Celular' style={styles.input} onChangeText={(cel) => setCelular(cel)} />
+            <TextInput placeholder='Logradouro' style={styles.input} onChangeText={(lg) => setLogradouro(lg)} />
+            <TextInput placeholder='Número' style={styles.input} onChangeText={(nm) => setNum(nm)} />
+            <TextInput placeholder='Bairro' style={styles.input} onChangeText={(nm) => setBairro(nm)} />
+            <TextInput placeholder='Complemento' style={styles.input} onChangeText={(nm) => setCompl(nm)} />
 
-          <View style={styles.containerPicker}>
-            <Picker
-              selectedValue={ufSel}
-              onValueChange={(itemValue) => defineEstado(itemValue)}
-              style={styles.pickerUf}
-              itemStyle={{height: 5, fontSize: 10}}
-            >
-              {
-                estados.map(uf => {
-                  return <Picker.Item label={uf.cid_uf} value={uf.cid_uf} key={uf.cid_uf} style={styles.txtLista} />
-                })
-              }
-            </Picker>
-            <Picker
-              selectedValue={cidade}
-              onValueChange={(itemValue) => setCidade(itemValue)}
-              style={styles.pickerCid}
-            >
-              {
-                cidades.map(cid => {
-                  return <Picker.Item label={cid.cid_nome} value={cid.cid_id} key={cid.cid_id} style={styles.txtLista} />
-                })
-              }
-            </Picker>
-          </View>
+            <View style={styles.containerPicker}>
+              <Picker
+                selectedValue={ufSel}
+                onValueChange={(itemValue) => defineEstado(itemValue)}
+                style={styles.pickerUf}
+                itemStyle={{ height: 5, fontSize: 10 }}
+              >
+                {
+                  estados.map(uf => {
+                    return <Picker.Item label={uf.cid_uf} value={uf.cid_uf} key={uf.cid_uf} style={styles.txtLista} />
+                  })
+                }
+              </Picker>
+              <Picker
+                selectedValue={cidade}
+                onValueChange={(itemValue) => setCidade(itemValue)}
+                style={styles.pickerCid}
+              >
+                {
+                  cidades.map(cid => {
+                    return <Picker.Item label={cid.cid_nome} value={cid.cid_id} key={cid.cid_id} style={styles.txtLista} />
+                  })
+                }
+              </Picker>
+            </View>
 
-          <TouchableOpacity onPress={() => validaCad()} style={styles.botao}>
-            <Text style={styles.txtBotao}>Cadastrar</Text>
-          </TouchableOpacity>
-{/* 
+            <TouchableOpacity onPress={() => validaCad()} style={styles.botao}>
+              <Text style={styles.txtBotao}>Cadastrar</Text>
+            </TouchableOpacity>
 
-          botão voltar
-          
-          
-          */}
+          </ScrollView>
+        </KeyboardAvoidingView>
+
+      </View>
 
 
-        </ScrollView>
-      </KeyboardAvoidingView>
+    )
+  }
 
-    </View>
+  function CadSucesso({ navigation, mensagem }) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.txtMensagem}>Cadastro realizado com sucesso!</Text>
+        <Text style={{ color: '#000' }}>{'Id do usuário: ' + mensagem}</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.botao}>
+          <Text style={styles.txtBotao}>Voltar para o login</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
-
-  )
-}
-
-function CadSucesso({ navigation, mensagem }) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.txtMensagem}>Cadastro realizado com sucesso!</Text>
-      <Text style={{ color: '#000' }}>{'Id do usuário: ' + mensagem}</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.botao}>
-        <Text style={styles.txtBotao}>Voltar para o login</Text>
-      </TouchableOpacity>
-    </View>
-  )
-}
-
-function CadErro({ mudaTela, mensagem }) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Erro ao cadastrar...</Text>
-      {
-        mensagem.map((mens, n) => {
-          if (n === 0) return <Text style={[styles.erros, styles.ttErros]} key={mens}>{mens}</Text>
-          return <Text style={styles.erros} key={mens}>{mens}</Text>
-        })
-      }
-      <TouchableOpacity style={styles.botao} onPress={() => mudaTela(0)}>
-        <Text style={styles.txtBotao}>Tentar novamente!</Text>
-      </TouchableOpacity>
-    </View>
-  )
-}
+  function CadErro({ mudaTela, mensagem }) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Erro ao cadastrar...</Text>
+        {
+          mensagem.map((mens, n) => {
+            if (n === 0) return <Text style={[styles.erros, styles.ttErros]} key={mens}>{mens}</Text>
+            return <Text style={styles.erros} key={mens}>{mens}</Text>
+          })
+        }
+        <TouchableOpacity style={styles.botao} onPress={() => mudaTela(0)}>
+          <Text style={styles.txtBotao}>Tentar novamente!</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }

@@ -81,7 +81,12 @@ const styles = StyleSheet.create({
     }, 
     ttErros: {
         fontWeight: 'bold'
-    }
+    }, 
+    containerTitulo: {
+        flexDirection: 'row', 
+        justifyContent: 'space-around', 
+        alignItems: 'center',        
+    },
 });
 
 export default styles;
