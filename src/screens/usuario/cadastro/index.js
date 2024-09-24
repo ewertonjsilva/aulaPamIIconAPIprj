@@ -8,20 +8,20 @@ import api from '../../../services/api';
 
 import Logo from '../../../components/logo';
 
-const estadosOff = [
-  { id: 1, cid_uf: 'UF' },
-  { id: 2, cid_uf: 'RJ' },
-  { id: 3, cid_uf: 'PR' },
-  { id: 4, cid_uf: 'SP' }
-];
+// const estadosOff = [
+//   { id: 1, cid_uf: 'UF' },
+//   { id: 2, cid_uf: 'RJ' },
+//   { id: 3, cid_uf: 'PR' },
+//   { id: 4, cid_uf: 'SP' }
+// ];
 
-const cidades = [
-  { id: 0, nome: 'Cidade' },
-  { id: 1, nome: 'Tupã' },
-  { id: 2, nome: 'Parapuã' },
-  { id: 3, nome: 'Marília' },
-  { id: 4, nome: 'Paulicéia' }
-];
+// const cidades = [
+//   { id: 0, nome: 'Cidade' },
+//   { id: 1, nome: 'Tupã' },
+//   { id: 2, nome: 'Parapuã' },
+//   { id: 3, nome: 'Marília' },
+//   { id: 4, nome: 'Paulicéia' }
+// ];
 
 export default function CadCliente({ navigation }) {
   // 0 - cadastro, 1 - sucesso, 2 - erro
@@ -29,12 +29,12 @@ export default function CadCliente({ navigation }) {
   const [estados, setEstados] = useState([]);
   const [mensagem, setMensagem] = useState([]);
 
-  const listUf = [{ cid_uf: 'UF' }];
-
   async function listarEstados() {
     try {
-      const response = await api.get('estados');
-      const arr = listUf.concat(response.data.message);
+      const response = await api.get('ufs');
+      // const arr = listUf.concat(response.data.message);
+      const arr = response.data.dados;
+      console.log(arr);
       setEstados(arr);
     } catch (err) {
       setEstados(estadosOff);
@@ -82,17 +82,14 @@ function Cadastro({ mudaTela, estados, montaMensagem, navigation }) {
   const tipo = 2; // Tipo de usuário cliente
   const pts = 0; // Sem pontuação ao cadastrar
 
-  const [nome, setNome] = useState('Testando');
-  const [email, setEmail] = useState('testando@email.com');
-  const [senha, setSenha] = useState('1234');
-  const [celular, setCelular] = useState('14999999999');
-  const [logradouro, setLogradouro] = useState('Rua Brasil');
-  const [num, setNum] = useState('10');
-  const [bairro, setBairro] = useState('Centro');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [celular, setCelular] = useState('');
+  const [logradouro, setLogradouro] = useState('');
+  const [num, setNum] = useState('');
+  const [bairro, setBairro] = useState('');
   const [compl, setCompl] = useState('');
-
-
-  const listCid = [{ cid_id: 0, cid_nome: 'Selecione a cidade', cid_uf: '-' }];
 
   const [usuario, setUsuario] = useState({
     usu_nome: '',
@@ -111,14 +108,11 @@ function Cadastro({ mudaTela, estados, montaMensagem, navigation }) {
 
   async function defineEstado(est) {
     const dados = {
-      cidade: '%%',
-      estado: est
+      cid_uf: est
     }
     try {
       const response = await api.post('cidades', dados);
-      const arr = listCid.concat(response.data.message);
-      setCidades(arr);
-      // console.log(response.data.message);
+      setCidades(response.data.dados);
     } catch (err) {
       setCidades([]);
       console.log('Erro: ' + err);
@@ -243,6 +237,7 @@ function Cadastro({ mudaTela, estados, montaMensagem, navigation }) {
               style={styles.pickerUf}
               itemStyle={{ height: 5, fontSize: 10 }}
             >
+              <Picker.Item label={'-'} value={'-'} key={'-'} style={styles.txtLista} />
               {
                 estados.map(uf => {
                   return <Picker.Item label={uf.cid_uf} value={uf.cid_uf} key={uf.cid_uf} style={styles.txtLista} />
@@ -254,6 +249,7 @@ function Cadastro({ mudaTela, estados, montaMensagem, navigation }) {
               onValueChange={(itemValue) => setCidade(itemValue)}
               style={styles.pickerCid}
             >
+              <Picker.Item label={'-'} value={'-'} key={'-'} style={styles.txtLista} />
               {
                 cidades.map(cid => {
                   return <Picker.Item label={cid.cid_nome} value={cid.cid_id} key={cid.cid_id} style={styles.txtLista} />
